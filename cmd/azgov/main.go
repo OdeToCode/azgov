@@ -30,8 +30,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		for _, r := range resources {
-			fmt.Println(*r.Name)
+		for _, resouce := range resources {
+			fmt.Println(*resource.Name)
 		}
 	}
 }
