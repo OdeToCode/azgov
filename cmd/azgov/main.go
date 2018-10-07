@@ -31,7 +31,7 @@ func main() {
 			panic(err)
 		}
 		for _, r := range resources {
-			fmt.Println(r)
+			fmt.Println(*r.Name)
 		}
 	}
 }
