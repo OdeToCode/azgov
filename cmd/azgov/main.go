@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/odetocode/azuregovenor/internal/pkg/azure"
+
 	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
 )
 
@@ -18,12 +20,18 @@ func main() {
 		panic(err)
 	}
 
-	config, err := configuration.Load(file)
+	settings, err := configuration.Load(file)
 	if err != nil {
 		panic(err)
 	}
 
-	for _, subscription := range config.Subscriptions {
-		fmt.Println(subscription.Name)
+	for _, subscription := range settings.Subscriptions {
+		resources, err := azure.GetResourcesInSubscription(subscription.ID, &settings)
+		if err != nil {
+			panic(err)
+		}
+		for _, r := range resources {
+			fmt.Println(r)
+		}
 	}
 }

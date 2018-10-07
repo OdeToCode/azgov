@@ -12,20 +12,25 @@ type Subscription struct {
 	ID   string
 }
 
-// Configuration holds the app.config data
-type Configuration struct {
-	Subscriptions []Subscription
+// AppSettings holds the app.config data
+type AppSettings struct {
+	Subscriptions           []Subscription
+	ClientID                string
+	ClientSecret            string
+	TenantID                string
+	ActiveDirectoryEndpoint string
+	Resource                string
 }
 
-// LoadConfig will read a JSON encoded file of Configuration
-func Load(reader io.Reader) (Configuration, error) {
-	var configuration Configuration
+// Load will read a JSON encoded file of Configuration
+func Load(reader io.Reader) (AppSettings, error) {
+	var settings AppSettings
 
 	bytes, err := ioutil.ReadAll(reader)
 	if err != nil {
-		return configuration, err
+		return settings, err
 	}
 
-	json.Unmarshal(bytes, &configuration)
-	return configuration, nil
+	json.Unmarshal(bytes, &settings)
+	return settings, nil
 }
