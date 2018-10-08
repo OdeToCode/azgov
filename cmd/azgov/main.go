@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -30,8 +31,11 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		for _, resouce := range resources {
-			fmt.Println(*resource.Name)
+		for _, r := range resources {
+			dump, _ := json.Marshal(r)
+			fmt.Printf(string(dump))
+			fmt.Println("***") // ;
+			// fmt.Printf("%s %s\n", *r.Name, *r.Type)
 		}
 	}
 }
