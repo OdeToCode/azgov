@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"os"
 
 	"github.com/odetocode/azuregovenor/internal/pkg/azure"
@@ -17,6 +15,7 @@ func main() {
 	}
 
 	file, err := os.Open(os.Args[1])
+	defer file.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -26,16 +25,19 @@ func main() {
 		panic(err)
 	}
 
+	_, err = azure.InitializeAuthorizer(settings)
+	if err != nil {
+		panic(err)
+	}
+
 	for _, subscription := range settings.Subscriptions {
-		resources, err := azure.GetResourcesInSubscription(subscription.ID, &settings)
+		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings)
 		if err != nil {
 			panic(err)
 		}
 		for _, r := range resources {
-			dump, _ := json.Marshal(r)
-			fmt.Printf(string(dump))
-			fmt.Println("***") // ;
-			// fmt.Printf("%s %s\n", *r.Name, *r.Type)
+			visit := r.GetVisitor()
+			visit(r)
 		}
 	}
 }

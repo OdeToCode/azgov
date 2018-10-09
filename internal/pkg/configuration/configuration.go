@@ -23,14 +23,14 @@ type AppSettings struct {
 }
 
 // Load will read a JSON encoded file of Configuration
-func Load(reader io.Reader) (AppSettings, error) {
+func Load(reader io.Reader) (*AppSettings, error) {
 	var settings AppSettings
 
 	bytes, err := ioutil.ReadAll(reader)
 	if err != nil {
-		return settings, err
+		return &settings, err
 	}
 
 	json.Unmarshal(bytes, &settings)
-	return settings, nil
+	return &settings, nil
 }
