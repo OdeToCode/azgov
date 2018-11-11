@@ -2,6 +2,7 @@ package azure
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
 	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
@@ -35,8 +36,12 @@ type ResourceInfo struct {
 }
 
 // GetVisitor finds a function to invoke for a given Azure resource
-func (info *ResourceInfo) GetVisitor() func(ResourceInfo) {
-	return resourceMap[info.Type]
+func (info *ResourceInfo) GetVisitor() (func(ResourceInfo), error) {
+	visitor := resourceMap[info.Type]
+	if visitor == nil {
+		return nil, errors.New("no visitor for " + info.Type)
+	}
+	return visitor, nil
 }
 
 // GetResourcesInSubscription will retrieve all the Azure resources in the specified subscription

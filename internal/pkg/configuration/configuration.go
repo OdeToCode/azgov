@@ -20,6 +20,7 @@ type AppSettings struct {
 	TenantID                string
 	ActiveDirectoryEndpoint string
 	Resource                string
+	EventHubConnection      string
 }
 
 // Load will read a JSON encoded file of Configuration

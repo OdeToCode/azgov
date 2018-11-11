@@ -14,13 +14,13 @@ func InitializeAuthorizer(settings *configuration.AppSettings) (autorest.Authori
 	config.AADEndpoint = settings.ActiveDirectoryEndpoint
 	config.Resource = settings.Resource
 
-	a, err := config.Authorizer()
+	_authorizer, err := config.Authorizer()
 
 	if err == nil {
 		return nil, err
 	}
 
-	authorizer = a
+	authorizer = _authorizer
 	return authorizer, nil
 }
 

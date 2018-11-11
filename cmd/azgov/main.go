@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/odetocode/azuregovenor/internal/pkg/azure"
@@ -36,8 +37,12 @@ func main() {
 			panic(err)
 		}
 		for _, r := range resources {
-			visit := r.GetVisitor()
-			visit(r)
+			visit, _ := r.GetVisitor()
+			if visit != nil {
+				visit(r)
+			} else {
+				log.Println("No visitor for " + r.Type)
+			}
 		}
 	}
 }

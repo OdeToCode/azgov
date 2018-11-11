@@ -14,7 +14,7 @@ func TestResourceMapCanProvideVisitor(t *testing.T) {
 
 	generic := &resources.GenericResource{ID: &id, Type: &resourceType, Name: &name}
 	info := newResourceInfo(generic)
-	visitor := info.GetVisitor()
+	visitor, _ := info.GetVisitor()
 
 	if visitor == nil {
 		t.Error("could not find resource type visitor")
