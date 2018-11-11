@@ -1,0 +1,3 @@
+- resourcegroup.location == resource.location ?
+- IAM settings
+- overprovisioning

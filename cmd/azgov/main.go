@@ -31,6 +31,11 @@ func main() {
 		panic(err)
 	}
 
+	_, err = azure.InitializeHub(settings)
+	if err != nil {
+		panic(err)
+	}
+
 	for _, subscription := range settings.Subscriptions {
 		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings)
 		if err != nil {

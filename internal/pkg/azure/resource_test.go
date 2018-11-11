@@ -3,6 +3,8 @@ package azure
 import (
 	"testing"
 
+	"github.com/Azure/azure-amqp-common-go/uuid"
+
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
 )
 
@@ -13,7 +15,8 @@ func TestResourceMapCanProvideVisitor(t *testing.T) {
 	name := "somename"
 
 	generic := &resources.GenericResource{ID: &id, Type: &resourceType, Name: &name}
-	info := newResourceInfo(generic)
+	run, _ := uuid.NewV4()
+	info := newResourceInfo(generic, run)
 	visitor, _ := info.GetVisitor()
 
 	if visitor == nil {

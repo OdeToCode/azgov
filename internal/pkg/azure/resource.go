@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/Azure/azure-amqp-common-go/uuid"
+
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
 	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
 )
@@ -12,10 +14,11 @@ var resourceMap = map[string]func(ResourceInfo){
 	"Microsoft.Cache/Redis": visitRedisCache,
 }
 
-func newResourceInfo(r *resources.GenericResource) *ResourceInfo {
+func newResourceInfo(r *resources.GenericResource, run uuid.UUID) *ResourceInfo {
 	info := new(ResourceInfo)
 	info.Type = *r.Type
 	info.Name = *r.Name
+	info.Run = run
 	info.GroupName = extractResourceGroupNameFromResourceID(*r.ID)
 	info.SubscriptionID = extractSubscriptionIDFromResourceID(*r.ID)
 	return info
@@ -33,6 +36,7 @@ type ResourceInfo struct {
 	GroupName      string
 	Name           string
 	Type           string
+	Run            uuid.UUID
 }
 
 // GetVisitor finds a function to invoke for a given Azure resource
@@ -48,9 +52,14 @@ func (info *ResourceInfo) GetVisitor() (func(ResourceInfo), error) {
 func GetResourcesInSubscription(subscriptionID string, settings *configuration.AppSettings) ([]ResourceInfo, error) {
 	allResources := make([]ResourceInfo, 0)
 
-	client := getClient(subscriptionID)
+	run, err := uuid.NewV4()
+	if err != nil {
+		return nil, err
+	}
 
+	client := getClient(subscriptionID)
 	context := context.Background()
+
 	listResult, err := client.List(context, "", "", nil)
 	if err != nil {
 		return nil, err
@@ -58,7 +67,7 @@ func GetResourcesInSubscription(subscriptionID string, settings *configuration.A
 
 	for listResult.NotDone() {
 		for _, r := range listResult.Values() {
-			info := newResourceInfo(&r)
+			info := newResourceInfo(&r, run)
 			allResources = append(allResources, *info)
 		}
 		err = listResult.Next()
