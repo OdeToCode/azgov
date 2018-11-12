@@ -13,14 +13,14 @@ type RedisReport struct {
 	NonSslPort bool
 }
 
-func visitRedisCache(info ResourceInfo) {
+func visitRedisCache(info *ResourceInfo) {
 
 	client := redis.NewClient(info.SubscriptionID)
 	client.Authorizer = GetAuthorizer()
 
 	redis, err := client.Get(context.Background(), info.GroupName, info.Name)
 	report := new(RedisReport)
-	report.ResourceInfo = info
+	report.ResourceInfo = *info
 
 	if err != nil {
 		return

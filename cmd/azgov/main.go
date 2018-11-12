@@ -44,7 +44,7 @@ func main() {
 		for _, r := range resources {
 			visit, _ := r.GetVisitor()
 			if visit != nil {
-				visit(r)
+				visit(&r)
 			} else {
 				log.Println("No visitor for " + r.Type)
 			}

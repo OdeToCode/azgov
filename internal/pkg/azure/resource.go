@@ -10,15 +10,22 @@ import (
 	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
 )
 
-var resourceMap = map[string]func(ResourceInfo){
-	"Microsoft.Cache/Redis": visitRedisCache,
+func noop(info *ResourceInfo) {
+
+}
+
+var resourceMap = map[string]func(*ResourceInfo){
+	"Microsoft.Sql/servers":           visitSQLServer,
+	"Microsoft.Cache/Redis":           visitRedisCache,
+	"Microsoft.Sql/servers/databases": noop,
 }
 
 func newResourceInfo(r *resources.GenericResource, run string) *ResourceInfo {
 	info := new(ResourceInfo)
 	info.Type = *r.Type
 	info.Name = *r.Name
-	info.Run = run
+	info.ID = *r.ID
+	info.RunID = run
 	info.GroupName = extractResourceGroupNameFromResourceID(*r.ID)
 	info.SubscriptionID = extractSubscriptionIDFromResourceID(*r.ID)
 	return info
@@ -32,15 +39,16 @@ func getClient(subscriptionID string) resources.Client {
 
 // ResourceInfo carries attributes common to all resources in Azure
 type ResourceInfo struct {
+	ID             string
 	SubscriptionID string
 	GroupName      string
 	Name           string
 	Type           string
-	Run            string
+	RunID          string
 }
 
 // GetVisitor finds a function to invoke for a given Azure resource
-func (info *ResourceInfo) GetVisitor() (func(ResourceInfo), error) {
+func (info *ResourceInfo) GetVisitor() (func(*ResourceInfo), error) {
 	visitor := resourceMap[info.Type]
 	if visitor == nil {
 		return nil, errors.New("no visitor for " + info.Type)

@@ -16,7 +16,7 @@ func TestResourceMapCanProvideVisitor(t *testing.T) {
 
 	generic := &resources.GenericResource{ID: &id, Type: &resourceType, Name: &name}
 	run, _ := uuid.NewV4()
-	info := newResourceInfo(generic, run)
+	info := newResourceInfo(generic, run.String())
 	visitor, _ := info.GetVisitor()
 
 	if visitor == nil {

@@ -38,7 +38,6 @@ func SendReport(report interface{}) error {
 
 	event := eventhub.NewEvent(message)
 	hub.Send(context, event)
-	cancel()
 
 	return nil
 }
