@@ -31,6 +31,6 @@ func visitRedisCache(info ResourceInfo) {
 		report.NonSslPort = true
 	}
 
-	SendReport(redis)
+	SendReport(report)
 
 }

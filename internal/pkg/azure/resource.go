@@ -14,7 +14,7 @@ var resourceMap = map[string]func(ResourceInfo){
 	"Microsoft.Cache/Redis": visitRedisCache,
 }
 
-func newResourceInfo(r *resources.GenericResource, run uuid.UUID) *ResourceInfo {
+func newResourceInfo(r *resources.GenericResource, run string) *ResourceInfo {
 	info := new(ResourceInfo)
 	info.Type = *r.Type
 	info.Name = *r.Name
@@ -36,7 +36,7 @@ type ResourceInfo struct {
 	GroupName      string
 	Name           string
 	Type           string
-	Run            uuid.UUID
+	Run            string
 }
 
 // GetVisitor finds a function to invoke for a given Azure resource
@@ -67,7 +67,7 @@ func GetResourcesInSubscription(subscriptionID string, settings *configuration.A
 
 	for listResult.NotDone() {
 		for _, r := range listResult.Values() {
-			info := newResourceInfo(&r, run)
+			info := newResourceInfo(&r, run.String())
 			allResources = append(allResources, *info)
 		}
 		err = listResult.Next()
