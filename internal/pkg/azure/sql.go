@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Azure/azure-sdk-for-go/services/preview/sql/mgmt/2015-05-01-preview/sql"
+	"github.com/Azure/azure-sdk-for-go/services/preview/sql/mgmt/2017-03-01-preview/sql"
 )
 
 // SQLReport to report on SQL database instances
@@ -17,27 +17,30 @@ type SQLReport struct {
 	ThreatDetectionNotEnabled bool
 }
 
-func visitThreatDetectionPolicies(info *ResourceInfo, report *SQLReport, server string, database string) {
-	client := sql.NewDatabaseThreatDetectionPoliciesClient(info.SubscriptionID)
+func visitThreatDetectionPolicies(info *ResourceInfo, report *SQLReport) {
+
+	client := sql.NewServerSecurityAlertPoliciesClient(info.SubscriptionID)
 	client.Authorizer = GetAuthorizer()
 
-	detection, err := client.Get(context.Background(), info.GroupName, server, database)
+	policy, err := client.Get(context.Background(), info.GroupName, info.Name)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	if detection.State != sql.SecurityAlertPolicyStateEnabled {
+	if policy.SecurityAlertPolicyProperties.State != sql.SecurityAlertPolicyStateEnabled {
 		report.Failed = true
 		report.ThreatDetectionNotEnabled = true
 	}
+
 }
 
-func visitAuditingPolicies(info *ResourceInfo, report *SQLReport, server string, database string) {
-	client := sql.NewDatabaseBlobAuditingPoliciesClient(info.SubscriptionID)
+func visitAuditingPolicies(info *ResourceInfo, report *SQLReport) {
+
+	client := sql.NewServerBlobAuditingPoliciesClient(info.SubscriptionID)
 	client.Authorizer = GetAuthorizer()
 
-	policy, err := client.Get(context.Background(), info.GroupName, server, database)
+	policy, err := client.Get(context.Background(), info.GroupName, info.Name)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -46,9 +49,11 @@ func visitAuditingPolicies(info *ResourceInfo, report *SQLReport, server string,
 		report.AuditingNotEnabled = true
 		report.Failed = true
 	}
+
 }
 
 func visitDatabases(info *ResourceInfo, report *SQLReport) {
+
 	client := sql.NewDatabasesClient(info.SubscriptionID)
 	client.Authorizer = GetAuthorizer()
 
@@ -66,14 +71,14 @@ func visitDatabases(info *ResourceInfo, report *SQLReport) {
 					report.EncryptionNotEnabled = true
 					report.Failed = true
 				}
-				visitAuditingPolicies(info, report, info.Name, *database.Name)
-				visitThreatDetectionPolicies(info, report, info.Name, *database.Name)
 			}
 		}
 	}
+
 }
 
 func visitFirewallRules(info *ResourceInfo, report *SQLReport) {
+
 	client := sql.NewFirewallRulesClient(info.SubscriptionID)
 	client.Authorizer = GetAuthorizer()
 
@@ -87,6 +92,7 @@ func visitFirewallRules(info *ResourceInfo, report *SQLReport) {
 		report.Failed = true
 		report.HolesInFirewall = true
 	}
+
 }
 
 func visitSQLServer(info *ResourceInfo) {
@@ -94,12 +100,10 @@ func visitSQLServer(info *ResourceInfo) {
 	report := new(SQLReport)
 	report.ResourceInfo = *info
 
-	// s := sql.NewServersClient(info.SubscriptionID)
-	// f, _ := s.Get(context.Background(), "", "")
-	// f
-
 	visitFirewallRules(info, report)
 	visitDatabases(info, report)
+	visitAuditingPolicies(info, report)
+	visitThreatDetectionPolicies(info, report)
 
 	SendReport(report)
 }

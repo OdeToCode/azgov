@@ -1,9 +1,8 @@
 package azure
 
 import (
-	"context"
 	"encoding/json"
-	"time"
+	"fmt"
 
 	"github.com/Azure/azure-event-hubs-go"
 	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
@@ -27,8 +26,8 @@ func InitializeHub(settings *configuration.AppSettings) (*eventhub.Hub, error) {
 // SendReport will deliver a message to event hub in Azure
 func SendReport(report interface{}) error {
 
-	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	//context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	//defer cancel()
 
 	message, err := json.Marshal(report)
 
@@ -36,8 +35,9 @@ func SendReport(report interface{}) error {
 		return err
 	}
 
-	event := eventhub.NewEvent(message)
-	hub.Send(context, event)
+	//event := eventhub.NewEvent(message)
+	//hub.Send(context, event)
+	fmt.Println(string(message))
 
 	return nil
 }
