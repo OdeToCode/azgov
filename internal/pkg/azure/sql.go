@@ -2,7 +2,7 @@ package azure
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"github.com/Azure/azure-sdk-for-go/services/preview/sql/mgmt/2017-03-01-preview/sql"
 )
@@ -24,7 +24,7 @@ func visitThreatDetectionPolicies(info *ResourceInfo, report *SQLReport) {
 
 	policy, err := client.Get(context.Background(), info.GroupName, info.Name)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -42,7 +42,8 @@ func visitAuditingPolicies(info *ResourceInfo, report *SQLReport) {
 
 	policy, err := client.Get(context.Background(), info.GroupName, info.Name)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
+		return
 	}
 
 	if policy.State != sql.BlobAuditingPolicyStateEnabled {
@@ -59,7 +60,7 @@ func visitDatabases(info *ResourceInfo, report *SQLReport) {
 
 	listResult, err := client.ListByServer(context.Background(), info.GroupName, info.Name, "transparentDataEncryption", "")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -84,7 +85,7 @@ func visitFirewallRules(info *ResourceInfo, report *SQLReport) {
 
 	listResult, err := client.ListByServer(context.Background(), info.GroupName, info.Name)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 

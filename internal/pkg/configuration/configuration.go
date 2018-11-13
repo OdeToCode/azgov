@@ -29,7 +29,7 @@ func Load(reader io.Reader) (*AppSettings, error) {
 
 	bytes, err := ioutil.ReadAll(reader)
 	if err != nil {
-		return &settings, err
+		return nil, err
 	}
 
 	json.Unmarshal(bytes, &settings)

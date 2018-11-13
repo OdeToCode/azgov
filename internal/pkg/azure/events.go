@@ -3,6 +3,7 @@ package azure
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/Azure/azure-event-hubs-go"
 	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
@@ -23,6 +24,7 @@ func InitializeHub(settings *configuration.AppSettings) (*eventhub.Hub, error) {
 	return hub, nil
 }
 
+// TODO make confiurable
 // SendReport will deliver a message to event hub in Azure
 func SendReport(report interface{}) error {
 
@@ -32,6 +34,7 @@ func SendReport(report interface{}) error {
 	message, err := json.Marshal(report)
 
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 

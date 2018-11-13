@@ -42,11 +42,13 @@ func main() {
 			panic(err)
 		}
 		for _, r := range resources {
-			visit, _ := r.GetVisitor()
+			log.Printf("Processing %s", r.Name)
+			visit, err := r.GetVisitor()
 			if visit != nil {
 				visit(&r)
-			} else {
-				log.Println("No visitor for " + r.Type)
+			}
+			if err != nil {
+				log.Println(err)
 			}
 		}
 	}

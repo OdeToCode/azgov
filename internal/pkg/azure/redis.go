@@ -2,6 +2,7 @@ package azure
 
 import (
 	"context"
+	"log"
 
 	"github.com/Azure/azure-sdk-for-go/services/redis/mgmt/2018-03-01/redis"
 )
@@ -23,6 +24,7 @@ func visitRedisCache(info *ResourceInfo) {
 	report.ResourceInfo = *info
 
 	if err != nil {
+		log.Println(err)
 		return
 	}
 
