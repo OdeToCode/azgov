@@ -1,10 +1,37 @@
 resources:
 - repo: self
+
 queue:
-  name: Hosted Linux Preview
+  name: Hosted Ubuntu 1604
+
 steps:
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
+  displayName: 'Build All .NET Core Projects'
   inputs:
-    projects: 'EventSinks/EventSinks.csproj;GovenorReports/GovenorReports.csproj'
-    workingDirectory: processing/AzGovenorProcessing
+    projects: '**/*.csproj'
+    arguments: '-c Release'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish and Archive GovenorReports'
+  inputs:
+    command: publish
+    arguments: '-c Release'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive EventSinks'
+  inputs:
+    rootFolderOrFile: processing/AzGovenorProcessing/EventSinks/bin/Release/netcoreapp2.1
+    includeRootFolder: false
+    archiveFile: processing/AzGovenorProcessing/EventSinks/bin/Release/netcoreapp2.1/EventSinks.zip
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: GovenorReports'
+  inputs:
+    PathtoPublish: processing/AzGovenorProcessing/GovenorReports/bin/Release/netcoreapp2.1/publish.zip
+    ArtifactName: GovenorReports
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Event Sinks'
+  inputs:
+    PathtoPublish: processing/AzGovenorProcessing/EventSinks/bin/Release/netcoreapp2.1/EventSinks.zip
+    ArtifactName: EventSinks
