@@ -5,6 +5,6 @@ steps:
 - task: DotNetCoreCLI@2
     displayName: 'Build Web App and Functions'
     inputs:
-        projects: EventSinks/EventSinks.csproj;GovenorReports/GovenorReports.csproj
+        projects: 'EventSinks/EventSinks.csproj;GovenorReports/GovenorReports.csproj'
         workingDirectory: processing/AzGovenorProcessing/
 
