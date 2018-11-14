@@ -36,8 +36,6 @@ func main() {
 		panic(err)
 	}
 
-	// TODO: check FTP access
-
 	for _, subscription := range settings.Subscriptions {
 		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings)
 		if err != nil {

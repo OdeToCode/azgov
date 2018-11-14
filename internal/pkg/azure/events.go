@@ -25,7 +25,6 @@ func InitializeHub(settings *configuration.AppSettings) (*eventhub.Hub, error) {
 	return hub, nil
 }
 
-// TODO make confiurable
 // SendReport will deliver a message to event hub in Azure
 func SendReport(report interface{}) error {
 

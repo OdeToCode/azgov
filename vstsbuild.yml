@@ -1,2 +1,10 @@
+queue:
+  name: Hosted Linux Preview
+
 steps:
-    - script: echo hello world
+- task: DotNetCoreCLI@2
+    displayName: 'Build Web App and Functions'
+    inputs:
+        projects: EventSinks/EventSinks.csproj;GovenorReports/GovenorReports.csproj
+        workingDirectory: processing/AzGovenorProcessing/
+
