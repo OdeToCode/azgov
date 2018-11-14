@@ -21,6 +21,7 @@ type AppSettings struct {
 	ActiveDirectoryEndpoint string
 	Resource                string
 	EventHubConnection      string
+	SendGridKey             string
 }
 
 // Load will read a JSON encoded file of Configuration

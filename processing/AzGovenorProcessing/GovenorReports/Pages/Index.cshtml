@@ -1,0 +1,141 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1>Current Situation in Azure</h1>
+<div class="text-muted">As of @Model.LastRun.Runtime.ToShortDateString() @Model.LastRun.Runtime.ToShortTimeString() UTC</div>
+<style>
+    .fail {
+        color: red;
+        font-size: larger;
+    }
+
+    .pass {
+        color: green;
+        font-size: larger;
+    }
+</style>
+@foreach (var subscription in Model.Subscriptions)
+{
+    <h2>For Subscription @subscription</h2>
+
+    <h3>Azure SQL Server</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Resource Group</th>
+            <th>Audit Checks</th>
+        </tr>
+        @foreach (var server in Model.SqlServers.Where(r => r.SubscriptionID == subscription))
+        {
+            <tr>
+                <td>
+                    @if (server.Failed)
+                    {
+                        <i class="fail glyphicon glyphicon-remove-sign"></i>
+                    }
+                    else
+                    {
+                        <i class="pass glpyhicon glyphicon-ok-sign"></i>
+                    }
+                    @server.Name
+                </td>
+                <td>@server.GroupName</td>
+                <td>
+                    <pass-fail model="@server" key="HolesInFirewall">
+                        Firewall
+                    </pass-fail>
+                    <pass-fail model="@server" key="EncryptionNotEnabled">
+                        Encrypted
+                    </pass-fail>
+                    <pass-fail model="@server" key="AuditingNotEnabled">
+                        Auditing
+                    </pass-fail>
+                    <pass-fail model="@server" key="ThreatDetectionNotEnabled">
+                        Threat detection
+                    </pass-fail>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <h3>App Services</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Resource Group</th>
+            <th>Audit Checks</th>
+        </tr>
+        @foreach (var app in Model.WebApps.Where(r => r.SubscriptionID == subscription))
+        {
+            <tr>
+                <td>
+                    @if (app.Failed)
+                    {
+                        <i class="fail glyphicon glyphicon-remove-sign"></i>
+                    }
+                    else
+                    {
+                        <i class="pass glpyhicon glyphicon-ok-sign"></i>
+                    }
+                    @app.Name
+                </td>
+                <td>@app.GroupName</td>
+                <td>
+                    <pass-fail model="@app" key="TLS12NotRequired">
+                        TLS 1.2
+                    </pass-fail>
+                    <pass-fail model="@app" key="HTTPSOnlyNotSet">
+                        HTTPS Only
+                    </pass-fail>
+                    <pass-fail model="@app" key="HTTP2NotEnabled">
+                        HTTP2
+                    </pass-fail>
+                    <pass-fail model="@app" key="ContainsConnectionStrings">
+                        Connection strings
+                    </pass-fail>
+                    <pass-fail model="@app" key="ContainsSensitiveSettings">
+                        Sensitive app settings
+                    </pass-fail>
+                    <pass-fail model="@app" key="ClientAffinityNotDisabled">
+                        Affinity Cookie
+                    </pass-fail>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <h3>Redis Cache</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Resource Group</th>
+            <th>Audit Checks</th>
+        </tr>
+        @foreach (var redis in Model.RedisCaches.Where(r => r.SubscriptionID == subscription))
+        {
+            <tr>
+                <td>
+                    @if (redis.Failed)
+                    {
+                        <i class="fail glyphicon glyphicon-remove-sign"></i>
+                    }
+                    else
+                    {
+                        <i class="pass glyphicon glyphicon-ok-sign"></i>
+                    }
+                    @redis.Name
+                </td>
+                <td>@redis.GroupName</td>
+                <td>
+                    <pass-fail model="@redis" key="NonSslPort">
+                        Secure connection
+                    </pass-fail>
+                    
+                </td>
+            </tr>
+        }
+    </table>
+}
