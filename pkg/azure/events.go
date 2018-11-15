@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/Azure/azure-event-hubs-go"
-	"github.com/odetocode/azgov/internal/pkg/configuration"
+	"github.com/odetocode/azgov/pkg/configuration"
 )
 
 var hub *eventhub.Hub

@@ -3,7 +3,7 @@ package azure
 import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
-	"github.com/odetocode/azgov/internal/pkg/configuration"
+	"github.com/odetocode/azgov/pkg/configuration"
 )
 
 var authorizer autorest.Authorizer

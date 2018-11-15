@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/azure-amqp-common-go/uuid"
 
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
-	"github.com/odetocode/azgov/internal/pkg/configuration"
+	"github.com/odetocode/azgov/pkg/configuration"
 )
 
 func noop(info *ResourceInfo) {

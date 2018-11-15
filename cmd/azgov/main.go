@@ -5,9 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/odetocode/azgov/internal/pkg/azure"
-
-	"github.com/odetocode/azgov/internal/pkg/configuration"
+	"github.com/odetocode/azgov/pkg/azure"
+	"github.com/odetocode/azgov/pkg/configuration"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
