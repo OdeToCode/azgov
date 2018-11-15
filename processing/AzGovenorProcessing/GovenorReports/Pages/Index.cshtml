@@ -19,123 +19,77 @@
 </style>
 @foreach (var subscription in Model.Subscriptions)
 {
-    <h2>In subscription @subscription</h2>
+    <h3>Azure SQL Servers:</h3>
+    @foreach (var server in Model.SqlServers.Where(r => r.SubscriptionID == subscription))
+    {
+        <div class="panel @(server.Failed ? "panel-danger" : "panel-success")">
+            <div class="panel-heading">
+                <h2 class="text-primary">@server.Name</h2>
+                <div class="text-muted">Resource group: @server.GroupName</div>
+            </div>
+            <div class="panel-body">
+                <pass-fail model="@server" key="HolesInFirewall">
+                    Firewall
+                </pass-fail>
+                <pass-fail model="@server" key="EncryptionNotEnabled">
+                    Encrypted
+                </pass-fail>
+                <pass-fail model="@server" key="AuditingNotEnabled">
+                    Auditing
+                </pass-fail>
+                <pass-fail model="@server" key="ThreatDetectionNotEnabled">
+                    Threat detection
+                </pass-fail>
+            </div>
+        </div>
+    }
 
-    <h3>Azure SQL Server</h3>
-    <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Resource Group</th>
-            <th>Audit Checks</th>
-        </tr>
-        @foreach (var server in Model.SqlServers.Where(r => r.SubscriptionID == subscription))
-        {
-            <tr>
-                <td>
-                    @if (server.Failed)
-                    {
-                        <i class="fail glyphicon glyphicon-remove-sign"></i>
-                    }
-                    else
-                    {
-                        <i class="pass glpyhicon glyphicon-ok-sign"></i>
-                    }
-                    @server.Name
-                </td>
-                <td>@server.GroupName</td>
-                <td>
-                    <pass-fail model="@server" key="HolesInFirewall">
-                        Firewall
-                    </pass-fail>
-                    <pass-fail model="@server" key="EncryptionNotEnabled">
-                        Encrypted
-                    </pass-fail>
-                    <pass-fail model="@server" key="AuditingNotEnabled">
-                        Auditing
-                    </pass-fail>
-                    <pass-fail model="@server" key="ThreatDetectionNotEnabled">
-                        Threat detection
-                    </pass-fail>
-                </td>
-            </tr>
-        }
-    </table>
+    <h3>App Services:</h3>
 
-    <h3>App Services</h3>
-    <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Resource Group</th>
-            <th>Audit Checks</th>
-        </tr>
-        @foreach (var app in Model.WebApps.Where(r => r.SubscriptionID == subscription))
-        {
-            <tr>
-                <td>
-                    @if (app.Failed)
-                    {
-                        <i class="fail glyphicon glyphicon-remove-sign"></i>
-                    }
-                    else
-                    {
-                        <i class="pass glpyhicon glyphicon-ok-sign"></i>
-                    }
-                    @app.Name
-                </td>
-                <td>@app.GroupName</td>
-                <td>
-                    <pass-fail model="@app" key="TLS12NotRequired">
-                        TLS 1.2
-                    </pass-fail>
-                    <pass-fail model="@app" key="HTTPSOnlyNotSet">
-                        HTTPS Only
-                    </pass-fail>
-                    <pass-fail model="@app" key="HTTP2NotEnabled">
-                        HTTP2
-                    </pass-fail>
-                    <pass-fail model="@app" key="ContainsConnectionStrings">
-                        Connection strings
-                    </pass-fail>
-                    <pass-fail model="@app" key="ContainsSensitiveSettings">
-                        Sensitive app settings
-                    </pass-fail>
-                    <pass-fail model="@app" key="ClientAffinityNotDisabled">
-                        Affinity Cookie
-                    </pass-fail>
-                </td>
-            </tr>
-        }
-    </table>
+    @foreach (var app in Model.WebApps.Where(r => r.SubscriptionID == subscription))
+    {
+        <div class="panel @(app.Failed ? "panel-danger" : "panel-success")">
+            <div class="panel-heading">
+                <h2 class="text-primary">@app.Name</h2>
+                <div class="text-muted">Resource group: @app.GroupName</div>
+            </div>
+            <div class="panel-body">
+                <pass-fail model="@app" key="TLS12NotRequired">
+                    TLS 1.2
+                </pass-fail>
+                <pass-fail model="@app" key="HTTPSOnlyNotSet">
+                    HTTPS Only
+                </pass-fail>
+                <pass-fail model="@app" key="HTTP2NotEnabled">
+                    HTTP2
+                </pass-fail>
+                <pass-fail model="@app" key="ContainsConnectionStrings">
+                    Connection strings
+                </pass-fail>
+                <pass-fail model="@app" key="ContainsSensitiveSettings">
+                    Sensitive app settings
+                </pass-fail>
+                <pass-fail model="@app" key="ClientAffinityNotDisabled">
+                    Affinity Cookie
+                </pass-fail>
+            </div>
+        </div>
+    }
 
-    <h3>Redis Cache</h3>
-    <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Resource Group</th>
-            <th>Audit Checks</th>
-        </tr>
-        @foreach (var redis in Model.RedisCaches.Where(r => r.SubscriptionID == subscription))
-        {
-            <tr>
-                <td>
-                    @if (redis.Failed)
-                    {
-                        <i class="fail glyphicon glyphicon-remove-sign"></i>
-                    }
-                    else
-                    {
-                        <i class="pass glyphicon glyphicon-ok-sign"></i>
-                    }
-                    @redis.Name
-                </td>
-                <td>@redis.GroupName</td>
-                <td>
-                    <pass-fail model="@redis" key="NonSslPort">
-                        Secure connection
-                    </pass-fail>
-                    
-                </td>
-            </tr>
-        }
-    </table>
+
+    <h3>Redis Caches:</h3>
+    @foreach (var redis in Model.RedisCaches.Where(r => r.SubscriptionID == subscription))
+    {
+        <div class="panel @(redis.Failed ? "panel-danger" : "panel-success")">
+            <div class="panel-heading">
+                <h2 class="text-primary">@redis.Name</h2>
+                <div class="text-muted">Resource group: @redis.GroupName</div>
+            </div>
+            <div class="panel-body">
+                <pass-fail model="@redis" key="NonSslPort">
+                    Secure connection
+                </pass-fail>
+            </div>
+        </div>
+    }
 }

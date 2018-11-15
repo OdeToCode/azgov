@@ -23,7 +23,7 @@ namespace GovenorReports.TagHelpers
 
             var result = (bool)Model.Properties[Key];
             var divClass = !result ? "bg-success" : "bg-danger";
-            var iClass = !result ? "glyphicon glyphicon-check" : "glyphicon glyphicon-warning-sign";
+            var iClass = !result ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove";
             var childContent = await output.GetChildContentAsync();
 
             output.TagName = "div";
