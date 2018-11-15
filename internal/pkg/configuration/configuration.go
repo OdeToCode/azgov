@@ -22,6 +22,11 @@ type AppSettings struct {
 	Resource                string
 	EventHubConnection      string
 	SendGridKey             string
+	ToAddress               string
+	FromAddress             string
+	Website                 string
+	SendNotification        bool
+	SendEvents              bool
 }
 
 // Load will read a JSON encoded file of Configuration

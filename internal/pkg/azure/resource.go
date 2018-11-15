@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/azure-amqp-common-go/uuid"
 
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
-	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
+	"github.com/odetocode/azgov/internal/pkg/configuration"
 )
 
 func noop(info *ResourceInfo) {
@@ -52,6 +52,7 @@ var resourceMap = map[string]func(*ResourceInfo){
 	"Sendgrid.Email/accounts":                             noop,
 	"Microsoft.Network/connections":                       noop,
 	"Microsoft.Logic/workflows":                           noop,
+	"Microsoft.Portal/dashboards":                         noop,
 }
 
 func newResourceInfo(r *resources.GenericResource, run string) *ResourceInfo {

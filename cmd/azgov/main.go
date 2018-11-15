@@ -1,21 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
-	"github.com/odetocode/azuregovenor/internal/pkg/azure"
+	"github.com/odetocode/azgov/internal/pkg/azure"
 
-	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
+	"github.com/odetocode/azgov/internal/pkg/configuration"
+	"github.com/sendgrid/sendgrid-go"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
 func main() {
 
-	if len(os.Args) < 2 {
-		panic("Enter a path to the configuration file")
+	path := "config.json"
+	if len(os.Args) > 1 {
+		path = os.Args[1]
 	}
 
-	file, err := os.Open(os.Args[1])
+	file, err := os.Open(path)
 	defer file.Close()
 	if err != nil {
 		panic(err)
@@ -51,5 +55,30 @@ func main() {
 				log.Println(err)
 			}
 		}
+	}
+
+	if settings.SendNotification {
+		notifyComplete(settings)
+	}
+}
+
+func notifyComplete(settings *configuration.AppSettings) {
+
+	request := sendgrid.GetRequest(settings.SendGridKey, "/v3/mail/send", "https://api.sendgrid.com")
+	request.Method = "POST"
+
+	from := mail.NewEmail("Azure Audit", settings.FromAddress)
+	to := mail.NewEmail(settings.ToAddress, settings.ToAddress)
+
+	subject := "Audit Complete"
+	content := mail.NewContent("text/plain", "Audit run complete. You can view the results at "+settings.Website)
+
+	message := mail.NewV3MailInit(from, subject, to, content)
+	request.Body = mail.GetRequestBody(message)
+
+	_, err := sendgrid.API(request)
+
+	if err != nil {
+		fmt.Println(err)
 	}
 }

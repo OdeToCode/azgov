@@ -7,10 +7,11 @@ import (
 	"time"
 
 	"github.com/Azure/azure-event-hubs-go"
-	"github.com/odetocode/azuregovenor/internal/pkg/configuration"
+	"github.com/odetocode/azgov/internal/pkg/configuration"
 )
 
 var hub *eventhub.Hub
+var sendEvents bool
 
 // InitializeHub will establish a connection to the destination hub
 func InitializeHub(settings *configuration.AppSettings) (*eventhub.Hub, error) {
@@ -22,24 +23,27 @@ func InitializeHub(settings *configuration.AppSettings) (*eventhub.Hub, error) {
 	}
 
 	hub = _hub
+	sendEvents = settings.SendEvents
 	return hub, nil
 }
 
 // SendReport will deliver a message to event hub in Azure
 func SendReport(report interface{}) error {
 
-	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	if sendEvents {
+		context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
 
-	message, err := json.Marshal(report)
+		message, err := json.Marshal(report)
 
-	if err != nil {
-		log.Println(err)
-		return err
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+
+		event := eventhub.NewEvent(message)
+		hub.Send(context, event)
 	}
-
-	event := eventhub.NewEvent(message)
-	hub.Send(context, event)
-
 	return nil
+
 }
