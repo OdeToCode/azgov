@@ -5,6 +5,19 @@ queue:
   name: Hosted VS2017
 
 steps:
+
+- task: Go@0
+  displayName: 'Install Go Deps'
+  inputs:
+    arguments: '-d'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\cmd\azgov'
+
+- task: Go@0
+  displayName: 'go build'
+  inputs:
+    command: build
+    arguments: 'cmd\azgov\main.go'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build All .NET Core Projects'
   inputs:
@@ -12,26 +25,54 @@ steps:
     arguments: '-c Release'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Publish and Archive GovenorReports'
+  displayName: 'Publish GovenorReports'
   inputs:
     command: publish
     arguments: '-c Release'
+    zipAfterPublish: false
+
+- task: CopyFiles@2
+  displayName: 'Copy Govenor to WebJob Location'
+  inputs:
+    SourceFolder: cmd\azgov
+    TargetFolder: processing\AzGovenorProcessing\GovenorReports\bin\Release\netcoreapp2.1\publish\App_Data\jobs\triggered\Govenor
+    OverWrite: true
+
+- task: DownloadSecureFile@1
+  displayName: 'Download Gov config'
+  inputs:
+    secureFile: '17f4406f-94ef-4a77-8504-fe1ffea21963'
+
+- task: CopyFiles@2
+  displayName: 'Copy config file'
+  inputs:
+    SourceFolder: $(Agent.TempDirectory)
+    Contents: config.json
+    TargetFolder: processing\AzGovenorProcessing\GovenorReports\bin\Release\netcoreapp2.1\publish\App_Data\jobs\triggered\Govenor
+    OverWrite: true
+
+- task: ArchiveFiles@2
+  displayName: 'Archive GovenorReports'
+  inputs:
+    rootFolderOrFile: processing\AzGovenorProcessing\GovenorReports\bin\Release\netcoreapp2.1\publish
+    includeRootFolder: false
+    archiveFile: processing\AzGovenorProcessing\GovenorReports\bin\Release\netcoreapp2.1\GovenorReports.zip
 
 - task: ArchiveFiles@2
   displayName: 'Archive EventSinks'
   inputs:
-    rootFolderOrFile: processing/AzGovenorProcessing/EventSinks/bin/Release/netcoreapp2.1
+    rootFolderOrFile: processing\AzGovenorProcessing\EventSinks\bin\Release\netcoreapp2.1
     includeRootFolder: false
-    archiveFile: processing/AzGovenorProcessing/EventSinks/bin/Release/netcoreapp2.1/EventSinks.zip
+    archiveFile: processing\AzGovenorProcessing\EventSinks\bin\Release\netcoreapp2.1\EventSinks.zip
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: GovenorReports'
   inputs:
-    PathtoPublish: processing/AzGovenorProcessing/GovenorReports/bin/Release/netcoreapp2.1/publish.zip
+    PathtoPublish: processing\AzGovenorProcessing\GovenorReports\bin\Release\netcoreapp2.1\GovenorReports.zip
     ArtifactName: GovenorReports
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: Event Sinks'
   inputs:
-    PathtoPublish: processing/AzGovenorProcessing/EventSinks/bin/Release/netcoreapp2.1/EventSinks.zip
+    PathtoPublish: processing\AzGovenorProcessing\EventSinks\bin\Release\netcoreapp2.1\EventSinks.zip
     ArtifactName: EventSinks
