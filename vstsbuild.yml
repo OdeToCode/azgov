@@ -16,7 +16,7 @@ steps:
   displayName: 'go build'
   inputs:
     command: build
-    arguments: 'cmd\azgov\main.go'
+    arguments: '-o cmd\azgov\azgov.exe cmd\azgov\main.go'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build All .NET Core Projects'
