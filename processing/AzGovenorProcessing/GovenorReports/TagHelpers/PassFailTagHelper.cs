@@ -21,14 +21,25 @@ namespace GovenorReports.TagHelpers
                 throw new ArgumentNullException($"{nameof(Key)} must be set for {nameof(PassFailTagHelper)}");
             }
 
-            var result = (bool)Model.Properties[Key];
-            var divClass = !result ? "bg-success" : "bg-danger";
-            var iClass = !result ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove";
-            var childContent = await output.GetChildContentAsync();
+            if (Model.Properties.ContainsKey(Key))
+            {
+                var result = (bool)Model.Properties[Key];
+                var divClass = !result ? "bg-success" : "bg-danger";
+                var iClass = !result ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove";
+                var childContent = await output.GetChildContentAsync();
 
-            output.TagName = "div";
-            output.Attributes.Add("class", divClass);
-            output.Content.SetHtmlContent($"<i class='{iClass}'></i>{childContent.GetContent()}");
+                output.TagName = "div";
+                output.Attributes.Add("class", divClass);
+                output.Content.SetHtmlContent($"<i class='{iClass}'></i>{childContent.GetContent()}");
+            }
+            else
+            {   
+                var childContent = await output.GetChildContentAsync();
+
+                output.TagName = "div";
+                output.Attributes.Add("class", "bg-warning");
+                output.Content.SetHtmlContent($"<i class='glyphicon glyphicon-question-sign'></i>{childContent.GetContent()}");
+            }
         }
     }
 }

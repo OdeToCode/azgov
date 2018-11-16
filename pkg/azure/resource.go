@@ -19,6 +19,7 @@ var resourceMap = map[string]func(*ResourceInfo){
 	"Microsoft.Sql/servers/databases": noop,
 	"Microsoft.Cache/Redis":           visitRedisCache,
 	"Microsoft.Web/sites":             visitWebSite,
+	"Microsoft.Portal/dashboards":     noop,
 
 	"Microsoft.Compute/disks":                             noop,
 	"Microsoft.Network/publicIPAddresses":                 noop,
@@ -52,7 +53,6 @@ var resourceMap = map[string]func(*ResourceInfo){
 	"Sendgrid.Email/accounts":                             noop,
 	"Microsoft.Network/connections":                       noop,
 	"Microsoft.Logic/workflows":                           noop,
-	"Microsoft.Portal/dashboards":                         noop,
 }
 
 func newResourceInfo(r *resources.GenericResource, run string) *ResourceInfo {

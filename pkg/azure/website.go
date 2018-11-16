@@ -18,6 +18,7 @@ type WebSiteReport struct {
 	TLS12NotRequired          bool
 	ContainsConnectionStrings bool
 	ContainsSensitiveSettings bool
+	FTPNotDisabled            bool
 }
 
 func visitWebSite(info *ResourceInfo) {
@@ -52,6 +53,11 @@ func visitWebSite(info *ResourceInfo) {
 	if !*configuration.HTTP20Enabled {
 		report.Failed = true
 		report.HTTP2NotEnabled = true
+	}
+
+	if configuration.FtpsState != web.Disabled {
+		report.Failed = true
+		report.FTPNotDisabled = true
 	}
 
 	if configuration.MinTLSVersion != web.OneFullStopTwo {
