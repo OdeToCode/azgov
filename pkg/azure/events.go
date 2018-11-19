@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"time"
 
 	"github.com/Azure/azure-event-hubs-go"
 	"github.com/odetocode/azgov/pkg/configuration"
@@ -31,8 +30,6 @@ func InitializeHub(settings *configuration.AppSettings) (*eventhub.Hub, error) {
 func SendReport(report interface{}) error {
 
 	if sendEvents {
-		context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
 
 		message, err := json.Marshal(report)
 
@@ -42,7 +39,11 @@ func SendReport(report interface{}) error {
 		}
 
 		event := eventhub.NewEvent(message)
-		hub.Send(context, event)
+		err = hub.Send(context.Background(), event)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 	}
 	return nil
 

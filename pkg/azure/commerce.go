@@ -12,6 +12,7 @@ import (
 var meters map[uuid.UUID]commerce.MeterInfo
 
 func InitializeRateCards(settings *configuration.AppSettings) error {
+
 	rateClient := commerce.NewRateCardClient(settings.Subscriptions[0].ID)
 	rateClient.Authorizer = GetAuthorizer()
 
