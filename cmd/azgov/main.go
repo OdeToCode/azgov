@@ -40,6 +40,7 @@ func main() {
 	}
 
 	for _, subscription := range settings.Subscriptions {
+		azure.GetSubscriptionRateCards(subscription.ID)
 		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings)
 		if err != nil {
 			panic(err)
