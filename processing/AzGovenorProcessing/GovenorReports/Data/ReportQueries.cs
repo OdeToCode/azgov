@@ -21,25 +21,34 @@ namespace GovenorReports.Data
 
         public Run GetLastRun()
         {
-            var query = Client.CreateDocumentQuery<Run>(
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@documentType", "audit")
+            };
+
+            var query = new SqlQuerySpec("SELECT TOP 1 c.RunID, c._ts FROM c WHERE c.DocumentType= @documentType ORDER BY c._ts DESC",
+                            new SqlParameterCollection(parameters));
+
+            var result = Client.CreateDocumentQuery<Run>(
                 ReportsLink,
-                "SELECT TOP 1 c.RunID, c._ts FROM c ORDER BY c._ts DESC", 
+                query, 
                 FeedOptions)
                 .AsEnumerable();
-            return query.First();
+            return result.First();
         }
 
-        public IList<Report> GetReports(string runID)
+        public IList<Audit> GetReports(string runID)
         {
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@runID", runID)
+                new SqlParameter("@runID", runID),
+                new SqlParameter("@documentType", "audit")
             };
 
-            var query = new SqlQuerySpec("SELECT * FROM c WHERE c.RunID = @runID",
+            var query = new SqlQuerySpec("SELECT * FROM c WHERE c.RunID = @runID AND c.DocumentType = @documentType",
                     new SqlParameterCollection(parameters));
 
-            var result = Client.CreateDocumentQuery<Report>(ReportsLink, query, FeedOptions);
+            var result = Client.CreateDocumentQuery<Audit>(ReportsLink, query, FeedOptions);
             return result.ToList();
         }
     }

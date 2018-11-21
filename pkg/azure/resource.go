@@ -61,6 +61,7 @@ func newResourceInfo(r *resources.GenericResource, run string) *ResourceInfo {
 	info.Name = *r.Name
 	info.ID = *r.ID
 	info.RunID = run
+	info.DocumentType = "audit"
 	info.GroupName = extractResourceGroupNameFromResourceID(*r.ID)
 	info.SubscriptionID = extractSubscriptionIDFromResourceID(*r.ID)
 	return info
@@ -80,6 +81,7 @@ type ResourceInfo struct {
 	Name           string
 	Type           string
 	RunID          string
+	DocumentType   string
 }
 
 // GetVisitor finds a function to invoke for a given Azure resource

@@ -7,7 +7,7 @@ namespace GovenorReports.TagHelpers
 {
     public class PassFailTagHelper : TagHelper
     {
-        public Report Model { get; set; }
+        public Audit Model { get; set; }
         public string Key { get; set; }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)

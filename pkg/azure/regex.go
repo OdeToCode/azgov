@@ -6,7 +6,7 @@ import (
 
 var groupNameFinder = regexp.MustCompile(`\/subscriptions\/.*?\/resourceGroups\/(.*?)\/.*`)
 var subscriptionFinder = regexp.MustCompile(`\/subscriptions\/(.*?)\/.*`)
-var resourceUriFinder = regexp.MustCompile(`resourceUri\\":\\"(.*?)\\`)
+var resourceUriFinder = regexp.MustCompile(`resourceUri":"(.*?)"`)
 
 func extractResourceGroupNameFromResourceID(resourceID string) string {
 	result := groupNameFinder.FindAllStringSubmatch(resourceID, len(resourceID))

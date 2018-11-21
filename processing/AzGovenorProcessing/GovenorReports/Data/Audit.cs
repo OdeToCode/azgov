@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace GovenorReports.Data
 {
-    public class Report
+    public class Audit
     {
         public string ID { get; set; }
         public string SubscriptionID { get; set; }

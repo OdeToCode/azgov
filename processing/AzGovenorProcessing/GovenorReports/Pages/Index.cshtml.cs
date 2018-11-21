@@ -10,11 +10,11 @@ namespace GovenorReports.Pages
         private readonly ReportQueries queries;
 
         public Run LastRun { get; private set; }
-        public IList<Report> Reports { get; private set; }
+        public IList<Audit> Reports { get; private set; }
         public IEnumerable<string> Subscriptions { get; set; }
-        public IEnumerable<Report> WebApps { get; private set; }
-        public IEnumerable<Report> SqlServers { get; private set; }
-        public IEnumerable<Report> RedisCaches { get; private set; }
+        public IEnumerable<Audit> WebApps { get; private set; }
+        public IEnumerable<Audit> SqlServers { get; private set; }
+        public IEnumerable<Audit> RedisCaches { get; private set; }
 
         const string RedisType = "Microsoft.Cache/Redis";
         const string SqlType = "Microsoft.Sql/servers";
