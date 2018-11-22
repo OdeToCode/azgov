@@ -14,6 +14,8 @@ import (
 type MeterMap map[string]*commerce.MeterInfo
 type UsageMap map[string]*commerce.UsageAggregation
 
+
+
 func SummarizeCharges(meters MeterMap, usage UsageMap) {
 	for k, v := range usage {
 		rate := meters[*v.MeterID]
