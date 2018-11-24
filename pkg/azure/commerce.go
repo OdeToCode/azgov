@@ -2,7 +2,6 @@ package azure
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -11,20 +10,23 @@ import (
 	"github.com/Azure/azure-sdk-for-go/services/preview/commerce/mgmt/2015-06-01-preview/commerce"
 )
 
-type MeterMap map[string]*commerce.MeterInfo
-type UsageMap map[string]*commerce.UsageAggregation
-
-
-
-func SummarizeCharges(meters MeterMap, usage UsageMap) {
-	for k, v := range usage {
-		rate := meters[*v.MeterID]
-		cost := *v.Quantity * *rate.MeterRates["0"]
-		fmt.Printf("%s cost %f", k, cost)
-	}
+type ResourceUsage struct {
+	ResourceInfo
+	Cost float64
 }
 
-func GetSubscriptionRateCards(subscriptionID string) (MeterMap, error) {
+type MeterMap map[string]*commerce.MeterInfo
+type UsageMap map[string][]*commerce.UsageAggregation
+
+// func SummarizeCharges(meters MeterMap, usage UsageMap) {
+// 	for k, v := range usage {
+// 		rate := meters[*v.MeterID]
+// 		cost := *v.Quantity * *rate.MeterRates["0"]
+// 		fmt.Printf("%s cost %f", k, cost)
+// 	}
+// }
+
+func GetSubscriptionRateCards(subscriptionID string) (*MeterMap, error) {
 
 	rateClient := commerce.NewRateCardClient(subscriptionID)
 	rateClient.Authorizer = GetAuthorizer()
@@ -35,18 +37,22 @@ func GetSubscriptionRateCards(subscriptionID string) (MeterMap, error) {
 		return nil, err
 	}
 
+	meters := makeMeterMap(&cardInfo)
+	return meters, nil
+}
+
+func makeMeterMap(cardInfo *commerce.ResourceRateCardInfo) *MeterMap {
 	meters := make(MeterMap, len(*cardInfo.Meters))
 	for k, v := range *cardInfo.Meters {
 		meters[v.MeterID.String()] = &(*cardInfo.Meters)[k]
 	}
-
-	return meters, nil
+	return &meters
 }
 
-func GetSubscriptionUsage(subscriptionID string) (UsageMap, error) {
+func GetSubscriptionUsage(subscriptionID string) (*UsageMap, error) {
 
 	details := true
-	usage := make(UsageMap)
+	usages := make(UsageMap)
 	reportStart, reportEnd := GetUsageReportRange()
 
 	client := commerce.NewUsageAggregatesClient(subscriptionID)
@@ -60,14 +66,8 @@ func GetSubscriptionUsage(subscriptionID string) (UsageMap, error) {
 
 	for result.NotDone() {
 		values := result.Values()
-		for k, v := range values {
-
-			// TODO handle nil cases
-			// Currently see this first with MeterName "Dynamic Public IP"
-			if v.InstanceData != nil {
-				id := extractResourceUri(*v.InstanceData)
-				usage[id] = &values[k]
-			}
+		for _, usage := range values {
+			recordUsage(&usage, &usages)
 		}
 
 		err = result.NextWithContext(context.Background())
@@ -76,7 +76,7 @@ func GetSubscriptionUsage(subscriptionID string) (UsageMap, error) {
 			return nil, err
 		}
 	}
-	return usage, nil
+	return &usages, nil
 
 }
 
@@ -87,4 +87,16 @@ func GetUsageReportRange() (date.Time, date.Time) {
 	reportStart := date.Time{Time: time.Date(year, month, day, 0, 0, 0, 0, time.UTC)}
 
 	return reportStart, reportEnd
+}
+
+func recordUsage(usage *commerce.UsageAggregation, usages *UsageMap) {
+	// TODO handle nil cases
+	// Currently see this first with MeterName "Dynamic Public IP"
+	// if v.InstanceData != nil {
+	// 	id := extractResourceUri(*v.InstanceData)
+
+	// 	key, ok := usage[id]
+	// 	if(ok)
+
+	// }
 }

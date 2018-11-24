@@ -10,7 +10,7 @@ import (
 
 func TestResourceMapCanProvideVisitor(t *testing.T) {
 
-	id := "/subscriptions/23adad27-b425-4a88-85a5-e60614bfde1b/resourceGroups/hereisthename/foo/bar/foo/bar"
+	id := "/subscriptions/23asp310-b425-4a88-85a5-e60614bfde1b/resourceGroups/hereisthename/foo/bar/foo/bar"
 	resourceType := "Microsoft.Cache/Redis"
 	name := "somename"
 

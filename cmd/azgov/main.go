@@ -40,9 +40,9 @@ func main() {
 	}
 
 	for _, subscription := range settings.Subscriptions {
-		rates, err := azure.GetSubscriptionRateCards(subscription.ID)
-		usage, err := azure.GetSubscriptionUsage(subscription.ID)
-		azure.SummarizeCharges(rates, usage)
+		//rates, err := azure.GetSubscriptionRateCards(subscription.ID)
+		//usage, err := azure.GetSubscriptionUsage(subscription.ID)
+		//azure.SummarizeCharges(rates, usage)
 		return
 
 		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings)
