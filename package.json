@@ -11,13 +11,14 @@
     "babel-preset-react": "^6.23.0",
     "browser-sync": "^2.18.8",
     "browser-sync-spa": "^1.0.3",
+    "cypress": "^3.1.2",
     "del": "^2.2.2",
     "es6-shim": "^0.35.3",
     "eslint": "^3.15.0",
     "eslint-config-xo-react": "^0.10.0",
     "eslint-config-xo-space": "^0.15.0",
     "eslint-plugin-react": "^6.10.0",
-    "gulp": "gulpjs/gulp#4ed9a4a3275559c73a396eff7e1fde3824951ebb",
+    "gulp": "github:gulpjs/gulp#4ed9a4a3275559c73a396eff7e1fde3824951ebb",
     "gulp-cssnano": "^2.1.2",
     "gulp-eslint": "^3.0.1",
     "gulp-filter": "^5.0.0",
@@ -93,5 +94,13 @@
     "globals": {
       "SystemJS": true
     }
+  },
+  "dependencies": {
+    "generator-jest": "^1.6.0",
+    "generator-ngx-rocket": "^5.3.0",
+    "generator-webapp": "^3.0.1",
+    "run": "^1.4.0",
+    "yarn": "^1.12.3",
+    "yeoman-environment": "^2.3.4"
   }
 }
