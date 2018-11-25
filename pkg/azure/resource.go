@@ -3,6 +3,7 @@ package azure
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
 	"github.com/odetocode/azgov/pkg/configuration"
@@ -57,7 +58,7 @@ func newResourceInfo(r *resources.GenericResource, run string) *ResourceInfo {
 	info := new(ResourceInfo)
 	info.Type = *r.Type
 	info.Name = *r.Name
-	info.ResourceID = *r.ID
+	info.ResourceID = strings.ToLower(*r.ID)
 	info.RunID = run
 	info.DocumentType = "audit"
 	info.GroupName = extractResourceGroupNameFromResourceID(*r.ID)

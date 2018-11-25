@@ -4,15 +4,26 @@
     ViewData["Title"] = "Azure Costs";
 }
 
-<h2>Costs</h2>
 <div class="text-muted"><div class="text-muted">As of @Model.Run.Runtime.ToShortDateString() @Model.Run.Runtime.ToShortTimeString() UTC</div></div>
 <div class="text-muted">Total cost estimated using Azure Usage Aggregation APIs from last 7 days and extrapolating to a 31 day month</div>
+
+<h1>Costs By Resource Group</h1>
+
+<h1>Costs By Resource</h1>
 <hr />
 <table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Group</th>
+        <th>Type</th>
+        <th>Predicted Monthly Cost</th>
+    </tr>
     @foreach (var resource in Model.Costs)
     {
         <tr>
-            <td>@resource.ResourceId</td>
+            <td>@resource.Name</td>
+            <td>@resource.GroupName</td>
+            <td>@resource.Type</td>
             <td class="text-right">@resource.MonthlyCost.ToString("C2")</td>
         </tr>
     }

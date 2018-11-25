@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/Azure/go-autorest/autorest/date"
@@ -12,10 +13,8 @@ import (
 )
 
 type ResourceUsage struct {
-	ResourceID   string
-	Cost         float64
-	DocumentType string
-	RunID        string
+	ResourceInfo
+	Cost float64
 }
 
 type MeterMap map[string]*commerce.MeterInfo
@@ -89,13 +88,13 @@ func recordUsage(usage commerce.UsageAggregation, usages UsageMap, meters MeterM
 	// TODO invetigate InstanceData nil cases, currently see this first with MeterName "Dynamic Public IP"
 
 	if usage.InstanceData != nil {
-		id := extractResourceUri(*usage.InstanceData)
+		id := strings.ToLower(extractResourceUri(*usage.InstanceData))
 		entry, ok := usages[id]
 		if !ok {
 			entry = new(ResourceUsage)
 			entry.DocumentType = "cost"
 			entry.RunID = runID
-			entry.ResourceID = id
+			entry.ResourceID = (id)
 			entry.Cost = 0
 			usages[id] = entry
 		}
@@ -106,4 +105,27 @@ func recordUsage(usage commerce.UsageAggregation, usages UsageMap, meters MeterM
 			entry.Cost += *usage.Quantity * *rate.MeterRates["0"]
 		}
 	}
+}
+
+func ProcessResourceUsage(usages UsageMap, resource ResourceInfo) {
+	var usage *ResourceUsage
+
+	for k, v := range usages {
+		if k == resource.ResourceID {
+			usage = v
+			break
+		}
+	}
+
+	if usage == nil {
+		fmt.Printf("No usages found for resource %s\n", resource.ResourceID)
+		return
+	}
+
+	usage.GroupName = resource.GroupName
+	usage.Name = resource.Name
+	usage.Type = resource.Type
+	usage.SubscriptionID = resource.SubscriptionID
+
+	SendReport(usage)
 }
