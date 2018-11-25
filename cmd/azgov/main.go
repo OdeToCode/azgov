@@ -41,11 +41,10 @@ func main() {
 
 	for _, subscription := range settings.Subscriptions {
 		rates, err := azure.GetSubscriptionRateCards(subscription.ID)
-		usage, err := azure.GetSubscriptionUsage(subscription.ID, rates)
-		for _, v := range usage {
-			fmt.Printf("%s %f\n", v.ID, v.Cost)
+		usages, err := azure.GetSubscriptionUsage(subscription.ID, rates)
+		for _, usage := range usages {
+			azure.SendReport(usage)
 		}
-		return
 
 		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings)
 		if err != nil {

@@ -92,6 +92,7 @@ func recordUsage(usage commerce.UsageAggregation, usages UsageMap, meters MeterM
 		entry, ok := usages[id]
 		if !ok {
 			entry = new(ResourceUsage)
+			entry.DocumentType = "cost"
 			entry.ID = id
 			entry.Cost = 0
 			usages[id] = entry
