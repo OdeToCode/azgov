@@ -95,14 +95,15 @@ func TestUsageRecorder(t *testing.T) {
 		t.Errorf("could not find the test data rate card")
 	}
 
+	run := "123"
 	usages := make(UsageMap)
-	recordUsage(usage1, usages, meters)
+	recordUsage(usage1, usages, meters, run)
 
 	if len(usages) != 1 {
 		t.Errorf("should have a single usage entered")
 	}
 
-	recordUsage(usage2, usages, meters)
+	recordUsage(usage2, usages, meters, run)
 
 	if len(usages) != 1 {
 		t.Errorf("should still have a single usage entered")

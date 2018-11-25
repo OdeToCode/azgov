@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSinks", "EventSinks\EventSinks.csproj", "{11CCACB5-44EC-4ACC-A89B-A696F2537D06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GovenorReports", "GovenorReports\GovenorReports.csproj", "{B20DCD8D-01CD-4030-A782-466AE946E425}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GovenorReports", "GovenorReports\GovenorReports.csproj", "{B20DCD8D-01CD-4030-A782-466AE946E425}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

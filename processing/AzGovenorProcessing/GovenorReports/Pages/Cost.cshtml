@@ -1,0 +1,19 @@
+﻿@page
+@model GovenorReports.Pages.CostModel
+@{
+    ViewData["Title"] = "Azure Costs";
+}
+
+<h2>Costs</h2>
+<div class="text-muted"><div class="text-muted">As of @Model.Run.Runtime.ToShortDateString() @Model.Run.Runtime.ToShortTimeString() UTC</div></div>
+<div class="text-muted">Total cost estimated using Azure Usage Aggregation APIs from last 7 days and extrapolating to a 31 day month</div>
+<hr />
+<table class="table">
+    @foreach (var resource in Model.Costs)
+    {
+        <tr>
+            <td>@resource.ResourceId</td>
+            <td class="text-right">@resource.MonthlyCost.ToString("C2")</td>
+        </tr>
+    }
+</table>

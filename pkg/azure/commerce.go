@@ -12,9 +12,10 @@ import (
 )
 
 type ResourceUsage struct {
-	ID           string
+	ResourceID   string
 	Cost         float64
 	DocumentType string
+	RunID        string
 }
 
 type MeterMap map[string]*commerce.MeterInfo
@@ -43,7 +44,7 @@ func makeMeterMap(cardInfo *commerce.ResourceRateCardInfo) MeterMap {
 	return meters
 }
 
-func GetSubscriptionUsage(subscriptionID string, rates MeterMap) (UsageMap, error) {
+func GetSubscriptionUsage(subscriptionID string, rates MeterMap, runID string) (UsageMap, error) {
 
 	details := true
 	usages := make(UsageMap)
@@ -61,7 +62,7 @@ func GetSubscriptionUsage(subscriptionID string, rates MeterMap) (UsageMap, erro
 	for result.NotDone() {
 		values := result.Values()
 		for _, usage := range values {
-			recordUsage(usage, usages, rates)
+			recordUsage(usage, usages, rates, runID)
 		}
 
 		err = result.NextWithContext(context.Background())
@@ -83,7 +84,7 @@ func getUsageReportRange() (date.Time, date.Time) {
 	return reportStart, reportEnd
 }
 
-func recordUsage(usage commerce.UsageAggregation, usages UsageMap, meters MeterMap) {
+func recordUsage(usage commerce.UsageAggregation, usages UsageMap, meters MeterMap, runID string) {
 
 	// TODO invetigate InstanceData nil cases, currently see this first with MeterName "Dynamic Public IP"
 
@@ -93,7 +94,8 @@ func recordUsage(usage commerce.UsageAggregation, usages UsageMap, meters MeterM
 		if !ok {
 			entry = new(ResourceUsage)
 			entry.DocumentType = "cost"
-			entry.ID = id
+			entry.RunID = runID
+			entry.ResourceID = id
 			entry.Cost = 0
 			usages[id] = entry
 		}

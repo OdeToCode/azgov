@@ -37,7 +37,22 @@ namespace GovenorReports.Data
             return result.First();
         }
 
-        public IList<Audit> GetReports(string runID)
+        public IList<CostReport> GetCostReports(string runID)
+        {
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@runID", runID),
+                new SqlParameter("@documentType", "cost")
+            };
+
+            var query = new SqlQuerySpec("SELECT * FROM c WHERE c.RunID = @runID AND c.DocumentType = @documentType ORDER BY c.Cost DESC",
+                    new SqlParameterCollection(parameters));
+
+            var result = Client.CreateDocumentQuery<CostReport>(ReportsLink, query, FeedOptions);
+            return result.ToList();
+        }
+
+        public IList<AuditReport> GetAuditReports(string runID)
         {
             var parameters = new List<SqlParameter>
             {
@@ -48,7 +63,7 @@ namespace GovenorReports.Data
             var query = new SqlQuerySpec("SELECT * FROM c WHERE c.RunID = @runID AND c.DocumentType = @documentType",
                     new SqlParameterCollection(parameters));
 
-            var result = Client.CreateDocumentQuery<Audit>(ReportsLink, query, FeedOptions);
+            var result = Client.CreateDocumentQuery<AuditReport>(ReportsLink, query, FeedOptions);
             return result.ToList();
         }
     }

@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/Azure/azure-amqp-common-go/uuid"
-
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
 	"github.com/odetocode/azgov/pkg/configuration"
 )
@@ -59,7 +57,7 @@ func newResourceInfo(r *resources.GenericResource, run string) *ResourceInfo {
 	info := new(ResourceInfo)
 	info.Type = *r.Type
 	info.Name = *r.Name
-	info.ID = *r.ID
+	info.ResourceID = *r.ID
 	info.RunID = run
 	info.DocumentType = "audit"
 	info.GroupName = extractResourceGroupNameFromResourceID(*r.ID)
@@ -75,7 +73,7 @@ func getClient(subscriptionID string) resources.Client {
 
 // ResourceInfo carries attributes common to all resources in Azure
 type ResourceInfo struct {
-	ID             string
+	ResourceID     string
 	SubscriptionID string
 	GroupName      string
 	Name           string
@@ -94,13 +92,8 @@ func (info *ResourceInfo) GetVisitor() (func(*ResourceInfo), error) {
 }
 
 // GetResourcesInSubscription will retrieve all the Azure resources in the specified subscription
-func GetResourcesInSubscription(subscriptionID string, settings *configuration.AppSettings) ([]ResourceInfo, error) {
+func GetResourcesInSubscription(subscriptionID string, settings *configuration.AppSettings, runID string) ([]ResourceInfo, error) {
 	allResources := make([]ResourceInfo, 0)
-
-	run, err := uuid.NewV4()
-	if err != nil {
-		return nil, err
-	}
 
 	client := getClient(subscriptionID)
 	context := context.Background()
@@ -112,7 +105,7 @@ func GetResourcesInSubscription(subscriptionID string, settings *configuration.A
 
 	for listResult.NotDone() {
 		for _, r := range listResult.Values() {
-			info := newResourceInfo(&r, run.String())
+			info := newResourceInfo(&r, runID)
 			allResources = append(allResources, *info)
 		}
 		err = listResult.Next()

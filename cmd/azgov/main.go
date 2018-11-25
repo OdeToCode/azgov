@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/satori/go.uuid"
+
 	"github.com/odetocode/azgov/pkg/azure"
 	"github.com/odetocode/azgov/pkg/configuration"
 	"github.com/sendgrid/sendgrid-go"
@@ -39,14 +41,19 @@ func main() {
 		panic(err)
 	}
 
+	runID, err := uuid.NewV4()
+	if err != nil {
+		panic(err)
+	}
+
 	for _, subscription := range settings.Subscriptions {
 		rates, err := azure.GetSubscriptionRateCards(subscription.ID)
-		usages, err := azure.GetSubscriptionUsage(subscription.ID, rates)
+		usages, err := azure.GetSubscriptionUsage(subscription.ID, rates, runID.String())
 		for _, usage := range usages {
 			azure.SendReport(usage)
 		}
 
-		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings)
+		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings, runID.String())
 		if err != nil {
 			panic(err)
 		}

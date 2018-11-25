@@ -4,9 +4,9 @@ using Newtonsoft.Json.Linq;
 
 namespace GovenorReports.Data
 {
-    public class Audit
+    public class AuditReport
     {
-        public string ID { get; set; }
+        public string ResourceID { get; set; }
         public string SubscriptionID { get; set; }
         public string GroupName { get; set; }
         public string Name { get; set; }

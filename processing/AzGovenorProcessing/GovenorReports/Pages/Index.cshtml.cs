@@ -10,11 +10,11 @@ namespace GovenorReports.Pages
         private readonly ReportQueries queries;
 
         public Run LastRun { get; private set; }
-        public IList<Audit> Reports { get; private set; }
+        public IList<AuditReport> Reports { get; private set; }
         public IEnumerable<string> Subscriptions { get; set; }
-        public IEnumerable<Audit> WebApps { get; private set; }
-        public IEnumerable<Audit> SqlServers { get; private set; }
-        public IEnumerable<Audit> RedisCaches { get; private set; }
+        public IEnumerable<AuditReport> WebApps { get; private set; }
+        public IEnumerable<AuditReport> SqlServers { get; private set; }
+        public IEnumerable<AuditReport> RedisCaches { get; private set; }
 
         const string RedisType = "Microsoft.Cache/Redis";
         const string SqlType = "Microsoft.Sql/servers";
@@ -29,7 +29,7 @@ namespace GovenorReports.Pages
         public void OnGet()
         {
             LastRun = queries.GetLastRun();
-            Reports = queries.GetReports(LastRun.RunID);
+            Reports = queries.GetAuditReports(LastRun.RunID);
             Subscriptions = Reports.Select(r => r.SubscriptionID).Distinct();
             WebApps = Reports.Where(r => r.Type == AppService);
             SqlServers = Reports.Where(r => r.Type == SqlType);
