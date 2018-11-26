@@ -43,8 +43,6 @@ func SendReport(report interface{}) error {
 
 		event := eventhub.NewEvent(message)
 
-		// TODO: temp workaround for random link name issue in amqp
-		time.Sleep(1500 * time.Millisecond)
 		err = hub.Send(context, event)
 		if err != nil {
 			log.Println(err)
