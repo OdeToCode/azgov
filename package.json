@@ -23,7 +23,7 @@
     "gulp-eslint": "^3.0.1",
     "gulp-filter": "^5.0.0",
     "gulp-htmlmin": "^3.0.0",
-    "gulp-hub": "frankwallis/gulp-hub#d461b9c700df9010d0a8694e4af1fb96d9f38bf4",
+    "gulp-hub": "github:frankwallis/gulp-hub#d461b9c700df9010d0a8694e4af1fb96d9f38bf4",
     "gulp-postcss": "^6.3.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
@@ -102,5 +102,26 @@
     "run": "^1.4.0",
     "yarn": "^1.12.3",
     "yeoman-environment": "^2.3.4"
-  }
+  },
+  "name": "azgov",
+  "description": "Azure Governor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edwinfrc/azgov.git"
+  },
+  "keywords": [
+    "npm",
+    "yarn",
+    "azgov",
+    "spnet\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Da\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C",
+    "bootstrap4"
+  ],
+  "author": "azgov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edwinfrc/azgov/issues"
+  },
+  "homepage": "https://github.com/edwinfrc/azgov#readme"
 }
