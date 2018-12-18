@@ -60,6 +60,7 @@ func newResourceInfo(r *resources.GenericResource, run string) *ResourceInfo {
 	info.Name = *r.Name
 	info.ResourceID = strings.ToLower(*r.ID)
 	info.RunID = run
+	info.Location = *r.Location
 	info.DocumentType = "audit"
 	info.GroupName = extractResourceGroupNameFromResourceID(*r.ID)
 	info.SubscriptionID = extractSubscriptionIDFromResourceID(*r.ID)
@@ -74,13 +75,15 @@ func getClient(subscriptionID string) resources.Client {
 
 // ResourceInfo carries attributes common to all resources in Azure
 type ResourceInfo struct {
-	ResourceID     string
-	SubscriptionID string
-	GroupName      string
-	Name           string
-	Type           string
-	RunID          string
-	DocumentType   string
+	ResourceID         string
+	SubscriptionID     string
+	GroupName          string
+	Name               string
+	Type               string
+	RunID              string
+	DocumentType       string
+	Location           string
+	LocationMisAligned bool
 }
 
 // GetVisitor finds a function to invoke for a given Azure resource
@@ -107,6 +110,7 @@ func GetResourcesInSubscription(subscriptionID string, settings *configuration.A
 	for listResult.NotDone() {
 		for _, r := range listResult.Values() {
 			info := newResourceInfo(&r, runID)
+
 			allResources = append(allResources, *info)
 		}
 		err = listResult.Next()

@@ -12,14 +12,19 @@ import (
 	"github.com/Azure/azure-sdk-for-go/services/preview/commerce/mgmt/2015-06-01-preview/commerce"
 )
 
+// ResourceUsage holds the computed cost for a resource
 type ResourceUsage struct {
 	ResourceInfo
 	Cost float64
 }
 
+// MeterMap holds a maaping from MeterID to MeterInfo
 type MeterMap map[string]*commerce.MeterInfo
+
+// UsageMap maps from resource ID to usage reports
 type UsageMap map[string]*ResourceUsage
 
+// GetSubscriptionRateCards returns all rate cards for a subscription
 func GetSubscriptionRateCards(subscriptionID string) (MeterMap, error) {
 
 	rateClient := commerce.NewRateCardClient(subscriptionID)
@@ -43,6 +48,7 @@ func makeMeterMap(cardInfo *commerce.ResourceRateCardInfo) MeterMap {
 	return meters
 }
 
+// GetSubscriptionUsage fetches all usage records for a subscription
 func GetSubscriptionUsage(subscriptionID string, rates MeterMap, runID string) (UsageMap, error) {
 
 	details := true
@@ -88,7 +94,7 @@ func recordUsage(usage commerce.UsageAggregation, usages UsageMap, meters MeterM
 	// TODO invetigate InstanceData nil cases, currently see this first with MeterName "Dynamic Public IP"
 
 	if usage.InstanceData != nil {
-		id := strings.ToLower(extractResourceUri(*usage.InstanceData))
+		id := strings.ToLower(extractResourceURI(*usage.InstanceData))
 		entry, ok := usages[id]
 		if !ok {
 			entry = new(ResourceUsage)
@@ -107,6 +113,7 @@ func recordUsage(usage commerce.UsageAggregation, usages UsageMap, meters MeterM
 	}
 }
 
+// ProcessResourceUsage can compute the cost for a resource
 func ProcessResourceUsage(usages UsageMap, resource ResourceInfo) {
 	var usage *ResourceUsage
 

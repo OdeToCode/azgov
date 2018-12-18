@@ -24,7 +24,7 @@ func TestExtractSubscriptionFromResourceId(t *testing.T) {
 
 func TestExtractResourceUri(t *testing.T) {
 	instanceData := `{"Microsoft.Resources":{"resourceUri":"/subscriptions/23asp310-b425-4a88-85a5-e60614bfde1b/resourceGroups/msc-snapshots-prod/providers/Microsoft.Storage/storageAccounts/mscsnapshotbackups","location":"useast"}}`
-	result := extractResourceUri(instanceData)
+	result := extractResourceURI(instanceData)
 
 	if result != "/subscriptions/23asp310-b425-4a88-85a5-e60614bfde1b/resourceGroups/msc-snapshots-prod/providers/Microsoft.Storage/storageAccounts/mscsnapshotbackups" {
 		t.Errorf("did not expect an id of %s", result)

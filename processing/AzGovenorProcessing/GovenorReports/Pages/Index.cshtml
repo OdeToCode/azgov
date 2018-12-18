@@ -40,6 +40,9 @@
                 <pass-fail model="@server" key="ThreatDetectionNotEnabled">
                     Threat detection
                 </pass-fail>
+                <pass-fail model="@server" key="LocationMisAligned">
+                    Location
+                </pass-fail>
             </div>
         </div>
     }
@@ -74,7 +77,10 @@
                 </pass-fail>
                 <pass-fail model="@app" key="FTPNotDisabled">
                     FTP/FTPS Access
-                </pass-fail>                
+                </pass-fail>  
+                <pass-fail model="@app" key="LocationMisAligned">
+                    Location
+                </pass-fail>
             </div>
         </div>
     }
@@ -91,6 +97,9 @@
             <div class="panel-body">
                 <pass-fail model="@redis" key="NonSslPort">
                     Secure connection
+                </pass-fail>
+                <pass-fail model="@redis" key="LocationMisAligned">
+                    Location
                 </pass-fail>
             </div>
         </div>

@@ -8,7 +8,7 @@ import (
 )
 
 func TestUsageRecorder(t *testing.T) {
-	meterJson := `
+	meterJSON := `
 	{
 		"Meters": [{
 			"EffectiveDate": "2014-11-01T00:00:00Z",
@@ -26,7 +26,7 @@ func TestUsageRecorder(t *testing.T) {
 			"Unit": "1 Hour"
 		}]
 	}`
-	usageJson1 :=
+	usageJSON1 :=
 		`{
 		"id": "/subscriptions/23aff310-b425-4a88-85a5-e60614bfde1b/providers/Microsoft.Commerce/UsageAggregates/Daily_BRSDT_20180901_0000",
 		"name": "Daily_BRSDT_20180901_0000",
@@ -46,7 +46,7 @@ func TestUsageRecorder(t *testing.T) {
 		}
 	  }`
 
-	usageJson2 :=
+	usageJSON2 :=
 		`{
 		"id": "/subscriptions/23aff310-b425-4a88-85a5-e60614bfde1b/providers/Microsoft.Commerce/UsageAggregates/Daily_BRSDT_20180901_0000",
 		"name": "Daily_BRSDT_20180901_0000",
@@ -67,19 +67,19 @@ func TestUsageRecorder(t *testing.T) {
 	  }`
 
 	rates := &commerce.ResourceRateCardInfo{}
-	e := json.Unmarshal([]byte(meterJson), rates)
+	e := json.Unmarshal([]byte(meterJSON), rates)
 	if e != nil {
 		t.Error(e)
 	}
 
 	usage1 := commerce.UsageAggregation{}
-	e = usage1.UnmarshalJSON([]byte(usageJson1))
+	e = usage1.UnmarshalJSON([]byte(usageJSON1))
 	if e != nil {
 		t.Error(e)
 	}
 
 	usage2 := commerce.UsageAggregation{}
-	e = usage2.UnmarshalJSON([]byte(usageJson2))
+	e = usage2.UnmarshalJSON([]byte(usageJSON2))
 	if e != nil {
 		t.Error(e)
 	}

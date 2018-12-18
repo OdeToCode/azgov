@@ -48,7 +48,19 @@ func main() {
 
 	for _, subscription := range settings.Subscriptions {
 		rates, err := azure.GetSubscriptionRateCards(subscription.ID)
+		if err != nil {
+			panic(err)
+		}
+
 		usages, err := azure.GetSubscriptionUsage(subscription.ID, rates, runID.String())
+		if err != nil {
+			panic(err)
+		}
+
+		groups, err := azure.GetAllResourceGroups(subscription.ID)
+		if err != nil {
+			panic(err)
+		}
 
 		resources, err := azure.GetResourcesInSubscription(subscription.ID, settings, runID.String())
 		if err != nil {
@@ -56,7 +68,7 @@ func main() {
 		}
 		for _, r := range resources {
 			log.Printf("Processing %s", r.Name)
-
+			azure.CheckLocation(groups, r)
 			azure.ProcessResourceUsage(usages, r)
 
 			visit, err := r.GetVisitor()
