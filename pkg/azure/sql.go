@@ -89,9 +89,12 @@ func visitFirewallRules(info *ResourceInfo, report *SQLReport) {
 		return
 	}
 
-	if len(*listResult.Value) > 0 {
-		report.Failed = true
-		report.HolesInFirewall = true
+	for _, rule := range *listResult.Value {
+
+		if *rule.StartIPAddress != *rule.EndIPAddress && *rule.EndIPAddress != "66.193.183.162" {
+			report.Failed = true
+			report.HolesInFirewall = true
+		}
 	}
 
 }
